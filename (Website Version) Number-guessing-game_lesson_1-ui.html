@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game Tutorial</title>
+    <style>
+        :root {
+            --primary-color: #4285f4;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --danger-color: #ea4335;
+            --light-grey: #f5f5f5;
+            --dark-grey: #333333;
+            --code-bg: #2d2d2d;
+            --code-color: #f8f8f2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .nav-bar {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            display: flex;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-bar a {
+            color: var(--dark-grey);
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        
+        .nav-bar a:hover {
+            color: var(--primary-color);
+        }
+        
+        main {
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+            font-size: 22px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 15px 0 10px;
+            font-size: 18px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block pre {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #1d1d1d;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            margin-top: 15px;
+        }
+        
+        .code-title {
+            color: #fff;
+            font-size: 14px;
+        }
+        
+        .code-actions {
+            display: flex;
+        }
+        
+        .code-action-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .code-action-btn:hover {
+            color: #fff;
+        }
+        
+        .run-result {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .note-box {
+            background-color: rgba(66, 133, 244, 0.1);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning-box {
+            background-color: rgba(251, 188, 5, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        button.run-code {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        button.run-code:hover {
+            background-color: #2d9348;
+        }
+        
+        .module-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .progress-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .progress {
+            position: absolute;
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .collapsible {
+            background-color: #f5f5f5;
+            color: var(--dark-grey);
+            cursor: pointer;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            border-radius: 5px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapsible:after {
+            content: '▼';
+            font-size: 12px;
+            color: var(--dark-grey);
+        }
+        
+        .active:after {
+            content: '▲';
+        }
+        
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: white;
+        }
+        
+        .code-keyword { color: #ff79c6; }
+        .code-function { color: #50fa7b; }
+        .code-string { color: #f1fa8c; }
+        .code-number { color: #bd93f9; }
+        .code-comment { color: #6272a4; }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            header {
+                padding: 15px;
+            }
+            main {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="main-title">Number Guessing Game Explanation</div>
+            <div>
+                <button class="run-code" id="dark-mode-toggle">Toggle Dark Mode</button>
+            </div>
+        </header>
+        
+        <div class="nav-bar">
+            <a href="#learning-objectives">Learning Objectives</a>
+            <a href="#module-elements">Module Elements</a>
+            <a href="#random-definition">Random Definition</a>
+            <a href="#random-examples">Code Examples</a>
+        </div>
+        
+        <main>
+            <section id="learning-objectives">
+                <h2>Learning Objectives</h2>
+                <p>After this lesson, you will be able to:</p>
+                <ul>
+                    <li>Define a random number.</li>
+                    <li>Use the random module library to create random elements and do simple games.</li>
+                    <li>Use the random module libraries.</li>
+                </ul>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="module-elements">
+                <h2>Module Elements</h2>
+                
+                <div class="module-box">
+                    <h3>What is a Module?</h3>
+                    <p>A file containing Python code that can define functions, classes, variables, and code to be imported into other Python scripts.</p>
+                    
+                    <h3>What is a Module Collection?</h3>
+                    <p>A module collection is a package of modules where each module is a *.py file.</p>
+                    
+                    <div class="note-box">
+                        <p><strong>Python's Language Design:</strong><br>
+                        A module is like a package library that has all methods in it.</p>
+                        <p>A <span class="code-keyword">*.py</span> file is considered a module that belongs to a collection.</p>
+                    </div>
+                    
+                    <p>Python has several built-in modules that come bundled with Python installation. They provide functionality for common tasks such as file I/O, random number generation, mathematical operations, etc.</p>
+                </div>
+                
+                <h3>Random Module Structure</h3>
+                <p>The random module provides different items (functions) for working with random numbers such as:</p>
+                <ul>
+                    <li><code>random()</code>: Returns a random float number between 0 and 1</li>
+                    <li><code>randint(a, b)</code>: Returns a random integer between a and b (inclusive)</li>
+                    <li><code>choice(seq)</code>: Returns a random element from the non-empty sequence</li>
+                    <li><code>shuffle(lst)</code>: Shuffles the elements in list (in place)</li>
+                </ul>
+                
+                <div class="code-header">
+                    <div class="code-title">Basic Random Module Usage</div>
+                    <div class="code-actions">
+                        <button class="code-action-btn copy-btn" data-target="code1">Copy</button>
+                    </div>
+                </div>
+                <div class="code-block" id="code1">
+                    <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Generate a random float between 0 and 1</span>
+x = random.random()
+<span class="code-function">print</span>(x)
+
+<span class="code-comment"># Generate a random integer between 1 and 100</span>
+y = random.randint(1, 100)
+<span class="code-function">print</span>(y)
+                    </pre>
+                </div>
+                <button class="run-code" data-target="code1">Run Code</button>
+                <div class="run-result" id="result-code1">
+                    0.7364859261734502<br>
+                    42
+                </div>
+            </section>
+            
+            <section id="random-definition">
+                <h2>Random Definition (PRNG)</h2>
+                
+                <p>Python's random module implements a pseudo-random number generator (PRNG), which is not truly random but appears random enough for most needs.</p>
+                
+                <div class="warning-box">
+                    <p>For the random number generator, we must first import the random library and its methods.</p>
+                    <p>It is not suitable for cryptographic purposes. For that, use the <code>secrets</code> module.</p>
+                </div>
+                
+                <div class="code-header">
+                    <div class="code-title">Random Number Examples</div>
+                    <div class="code-actions">
+                        <button class="code-action-btn copy-btn" data-target="code2">Copy</button>
+                    </div>
+                </div>
+                <div class="code-block" id="code2">
+                    <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Generate a random float number between 0 and 1 (not including 1)</span>
+r = random.random()
+<span class="code-function">print</span>(r)
+
+<span class="code-comment"># Generate random int between 1 and 10 inclusive</span>
+rand_int = random.randint(1, 10)
+<span class="code-function">print</span>(rand_int)
+                    </pre>
+                </div>
+                <button class="run-code" data-target="code2">Run Code</button>
+                <div class="run-result" id="result-code2">
+                    0.23875673452912673<br>
+                    7
+                </div>
+            </section>
+            
+            <section id="random-examples">
+                <h2>Random Module Examples</h2>
+                
+                <button class="collapsible">Basic Random Functions</button>
+                <div class="content">
+                    <div class="code-header">
+                        <div class="code-title">Basic Random Functions Example</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn copy-btn" data-target="code3">Copy</button>
+                        </div>
+                    </div>
+                    <div class="code-block" id="code3">
+                        <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Get a random integer between 10 and 20 (inclusive)</span>
+r = random.randint(10, 20)
+<span class="code-function">print</span>(<span class="code-string">"Random integer:"</span>, r)
+
+<span class="code-comment"># Get a random element from a list</span>
+colors = [<span class="code-string">"red"</span>, <span class="code-string">"green"</span>, <span class="code-string">"blue"</span>, <span class="code-string">"yellow"</span>]
+random_color = random.choice(colors)
+<span class="code-function">print</span>(<span class="code-string">"Random color:"</span>, random_color)
+                        </pre>
+                    </div>
+                    <button class="run-code" data-target="code3">Run Code</button>
+                    <div class="run-result" id="result-code3">
+                        Random integer: 15<br>
+                        Random color: blue
+                    </div>
+                </div>
+                
+                <button class="collapsible">Shuffling a List</button>
+                <div class="content">
+                    <div class="code-header">
+                        <div class="code-title">Shuffling a List Example</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn copy-btn" data-target="code4">Copy</button>
+                        </div>
+                    </div>
+                    <div class="code-block" id="code4">
+                        <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Creating a list of numbers</span>
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+<span class="code-function">print</span>(<span class="code-string">"Original list:"</span>, numbers)
+
+<span class="code-comment"># Shuffle the list in-place</span>
+random.shuffle(numbers)
+<span class="code-function">print</span>(<span class="code-string">"Shuffled list:"</span>, numbers)
+                        </pre>
+                    </div>
+                    <button class="run-code" data-target="code4">Run Code</button>
+                    <div class="run-result" id="result-code4">
+                        Original list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]<br>
+                        Shuffled list: [7, 3, 10, 1, 8, 5, 2, 4, 9, 6]
+                    </div>
+                </div>
+                
+                <button class="collapsible">Simple Number Guessing Game</button>
+                <div class="content">
+                    <div class="code-header">
+                        <div class="code-title">Number Guessing Game Implementation</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn copy-btn" data-target="code5">Copy</button>
+                        </div>
+                    </div>
+                    <div class="code-block" id="code5">
+                        <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-keyword">def</span> <span class="code-function">number_guessing_game</span>():
+    <span class="code-comment"># Generate a random number between 1 and 100</span>
+    secret_number = random.randint(1, 100)
+    attempts = 0
+    max_attempts = 10
+    
+    <span class="code-function">print</span>(<span class="code-string">"Welcome to the Number Guessing Game!"</span>)
+    <span class="code-function">print</span>(<span class="code-string">"I'm thinking of a number between 1 and 100."</span>)
+    <span class="code-function">print</span>(<span class="code-string">f"You have {max_attempts} attempts to guess it."</span>)
+    
+    <span class="code-keyword">while</span> attempts < max_attempts:
+        <span class="code-keyword">try</span>:
+            guess = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"Enter your guess: "</span>))
+            attempts += 1
+            
+            <span class="code-keyword">if</span> guess < secret_number:
+                <span class="code-function">print</span>(<span class="code-string">"Too low! Try again."</span>)
+            <span class="code-keyword">elif</span> guess > secret_number:
+                <span class="code-function">print</span>(<span class="code-string">"Too high! Try again."</span>)
+            <span class="code-keyword">else</span>:
+                <span class="code-function">print</span>(<span class="code-string">f"Congratulations! You guessed the number in {attempts} attempts!"</span>)
+                <span class="code-keyword">return</span>
+                
+            <span class="code-function">print</span>(<span class="code-string">f"Attempts remaining: {max_attempts - attempts}"</span>)
+            
+        <span class="code-keyword">except</span> ValueError:
+            <span class="code-function">print</span>(<span class="code-string">"Please enter a valid number."</span>)
+    
+    <span class="code-function">print</span>(<span class="code-string">f"Game over! The secret number was {secret_number}."</span>)
+
+<span class="code-comment"># Call the function to start the game</span>
+<span class="code-comment"># number_guessing_game()</span>
+                        </pre>
+                    </div>
+                    <p>This game generates a random number and lets the player guess it with hints about whether their guess is too high or too low.</p>
+                    <div class="note-box">
+                        <p>To actually play the game, uncomment the last line and run the code in a Python environment. Since this is a tutorial page, the line is commented out to prevent unexpected input prompts.</p>
+                    </div>
+                </div>
+                
+                <button class="collapsible">Advanced Random Usage: Weighted Choices</button>
+                <div class="content">
+                    <div class="code-header">
+                        <div class="code-title">Weighted Random Choices Example</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn copy-btn" data-target="code6">Copy</button>
+                        </div>
+                    </div>
+                    <div class="code-block" id="code6">
+                        <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Example of using weighted choices (Python 3.6+)</span>
+options = [<span class="code-string">"rare"</span>, <span class="code-string">"uncommon"</span>, <span class="code-string">"common"</span>]
+weights = [10, 30, 60]  <span class="code-comment"># 10% rare, 30% uncommon, 60% common</span>
+
+<span class="code-comment"># Simulate 10 weighted random choices</span>
+results = {}
+<span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(10):
+    choice = random.choices(options, weights=weights)[0]
+    results[choice] = results.get(choice, 0) + 1
+
+<span class="code-function">print</span>(<span class="code-string">"Results of 10 weighted random choices:"</span>)
+<span class="code-keyword">for</span> option, count <span class="code-keyword">in</span> results.items():
+    <span class="code-function">print</span>(<span class="code-string">f"{option}: {count}"</span>)
+                        </pre>
+                    </div>
+                    <button class="run-code" data-target="code6">Run Code</button>
+                    <div class="run-result" id="result-code6">
+                        Results of 10 weighted random choices:<br>
+                        common: 6<br>
+                        uncommon: 3<br>
+                        rare: 1
+                    </div>
+                </div>
+                
+                <button class="collapsible">Random Sampling</button>
+                <div class="content">
+                    <div class="code-header">
+                        <div class="code-title">Random Sampling Example</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn copy-btn" data-target="code7">Copy</button>
+                        </div>
+                    </div>
+                    <div class="code-block" id="code7">
+                        <pre>
+<span class="code-keyword">import</span> <span class="code-function">random</span>
+
+<span class="code-comment"># Sample a list of numbers without replacement</span>
+numbers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+<span class="code-function">print</span>(<span class="code-string">"Original list:"</span>, numbers)
+
+<span class="code-comment"># Get 3 random samples without replacement</span>
+sample = random.sample(numbers, k=3)
+<span class="code-function">print</span>(<span class="code-string">"Random sample of 3 elements:"</span>, sample)
+
+<span class="code-comment"># Sample with replacement (can get the same number multiple times)</span>
+with_replacement = [random.choice(numbers) <span class="code-keyword">for</span> _ <span class="code-keyword">in</span> <span class="code-function">range</span>(3)]
+<span class="code-function">print</span>(<span class="code-string">"Sample with replacement:"</span>, with_replacement)
+                        </pre>
+                    </div>
+                    <button class="run-code" data-target="code7">Run Code</button>
+                    <div class="run-result" id="result-code7">
+                        Original list: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]<br>
+                        Random sample of 3 elements: [40, 80, 20]<br>
+                        Sample with replacement: [50, 50, 90]
+                    </div>
+                </div>
+            </section>
+            
+            <section id="random-language-stats">
+                <h2>Random Module in Use: Stats</h2>
+                
+                <div class="module-box">
+                    <p>In data science and statistics, random sampling is crucial for:</p>
+                    <ul>
+                        <li>Creating training/test splits in machine learning datasets</li>
+                        <li>Bootstrapping for statistical inference</li>
+                        <li>Monte Carlo simulations</li>
+                        <li>Generating synthetic data for testing</li>
+                    </ul>
+                    
+                    <div class="note-box">
+                        <p><strong>Note:</strong> When reproducibility is important, you can set a seed for the random number generator:</p>
+                        <code>random.seed(42)</code>
+                        <p>This ensures that the same "random" numbers are generated each time the program is run.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Toggle dark mode
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+        
+        // Handle collapsible sections
+        const coll = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+        
+        // Simulate running code
+        const runButtons = document.querySelectorAll(".run-code");
+        runButtons.forEach(button => {
+            if (button.id !== 'dark-mode-toggle') {
+                button.addEventListener("click", function() {
+                    const targetId = this.getAttribute("data-target");
+                    const resultDiv = document.getElementById("result-" + targetId);
+                    if (resultDiv) {
+                        resultDiv.style.display = "block";
+                    }
+                });
+            }
+        });
+        
+        // Copy code functionality
+        const copyButtons = document.querySelectorAll(".copy-btn");
+        copyButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const targetId = this.getAttribute("data-target");
+                const codeBlock = document.getElementById(targetId);
+                const textToCopy = codeBlock.textContent.trim();
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    // Change button text temporarily
+                    const originalText = this.textContent;
+                    this.textContent = "Copied!";
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            });
+        });
+        
+        // Progress bar simulation
+        const progressBar = document.getElementById('progress');
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+            } else {
+                width += 25;
+                progressBar.style.width = width + '%';
+            }
+        }, 1000);
+        
+        // Track section visibility for progress
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Update progress based on which section is visible
+                    const sectionId = entry.target.id;
+                    let progress = 0;
+                    
+                    switch(sectionId) {
+                        case 'learning-objectives':
+                            progress = 25;
+                            break;
+                        case 'module-elements':
+                            progress = 50;
+                            break;
+                        case 'random-definition':
+                            progress = 75;
+                            break;
+                        case 'random-examples':
+                            progress = 100;
+                            break;
+                    }
+                    
+                    progressBar.style.width = progress + '%';
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
